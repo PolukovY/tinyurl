@@ -1,0 +1,35 @@
+version: '3.7'
+networks:
+  backend:
+    name: app
+    driver: bridge
+volumes:
+  postgres-data:
+# Define services
+services:
+  # Database Service (Postgres)
+  db:
+    # Use the Docker Image postgres. This will pull the 12 version.
+    image: postgres:12
+    # Give the container the name postgres-db. You can changes to something else.
+    container_name: postgres-db
+    restart: always
+    # Set a volume some that database is not lost after shutting down the container.
+    # I used the name postgres-data but you can changed it to something else.
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    # Maps port 5432 (localhost) to port 5432 on the container. You can change the ports to fix your needs.
+    ports:
+      - "5432:5432"
+    # Setup the username, password, and database name. You can changes these values.
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: short_url
+      PGDATA: /var/lib/postgresql/data/pgdata
+    # Service health check
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 1m
+      timeout: 10s
+      retries: 2

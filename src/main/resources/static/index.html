@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<head>
+    <title>TinyUrl Service</title>
+
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <style>
+        .weak {
+            opacity: 0.5;
+            font-size: 0.8em;
+        }
+
+        .match {
+            opacity: 0.5;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img src="/img/logo.png" width="112" height="28">
+        </a>
+
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="/">
+                Home
+            </a>
+        </div>
+    </div>
+</nav>
+
+    <div id="short-url">
+        <section class="section">
+            <div class="container">
+                <div class="columns">
+                    <div class="column is-full">
+                        <h1 class="title has-text-centered">
+                            Paste the URL to be shortened
+                        </h1>
+                        <p class="subtitle">
+                            <div class="field has-addons">
+                                <div class="control is-expanded">
+                                        <input class="input is-large is-hovered" type="text" placeholder="Enter the link here" v-model="longUrl">
+                                        <span v-bind:class="{visible: loading}" class="weak hidden">
+                                            <progress class="progress is-small is-primary" max="100">15%</progress>
+                                        </span>
+                                </div>
+                                <div class="control">
+                                    <a class="button is-info is-large"
+                                       v-on:click="convertToShortUrl" :class="longUrl.startsWith('https://') || longUrl.startsWith('http://') ? 'is-info ':'is-static'"
+                                    >Shorten URL</a>
+                                </div>
+                            </div>
+                            <span v-if="shortUrl.length === 0">
+                                It is a free tool to shorten a URL or reduce a link. <br/>
+                                Use our URL Shortener to create a shortened link making it easy to remember.
+                            </span>
+
+                            <span v-else-if="shortUrl.length > 0">
+                                <div class="notification is-primary">
+                                    {{ shortUrl }}
+                                </div>
+                            </span>
+                        <br/>
+
+
+                        <h2 class="title has-text-centered">Todo items:</h2>
+                            <div class="tile is-ancestor">
+                                <div class="tile is-vertical is-12">
+                                    <div class="tile">
+                                        <div class="tile is-parent is-vertical">
+                                            <article class="tile is-child notification is-primary">
+                                                <p class="subtitle">How many clicks it received.</p>
+                                            </article>
+                                            <article class="tile is-child notification is-warning">
+                                                <p class="subtitle">Link expiration 1 year.</p>
+                                            </article>
+                                        </div>
+                                        <div class="tile is-parent">
+                                            <article class="tile is-child notification is-info">
+                                                <p class="subtitle">Want More? Try Premium Features!</p>
+                                            </article>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+    <div class="content has-text-centered">
+        <p>
+            ©2020 tinyurl.pp.ua - Tool to shorten a long link.
+            <br/>
+            <a href="/report.html">Report Malicious Short Link</a>|
+            <a href="/terms.html">Terms of Service</a>|
+            <a href="/privacy.html">Privacy</a>|
+            <a href="/contact.html">Contact</a>.
+        </p>
+    </div>
+</footer>
+</body>
+
+
+<script type="text/javascript">
+
+    Vue.config.devtools = true
+    new Vue({
+        el: '#short-url',
+        data: {
+            longUrl: '',
+            shortPrefix: '',
+            rootUrl: 'http://localhost:8080/url/',
+            shortUrl: '',
+            loading: false,
+            showResult: false
+        },
+        methods: {
+            convertToShortUrl: function () {
+                let myApp = this;
+
+                const request = { longUrl: this.longUrl };
+                const headers = {
+                    "Content-Type": "application/json"
+                };
+                myApp.loading = true;
+                myApp.message = '';
+                axios.post("/url", request, { headers })
+                    .then(function (response) {
+                        myApp.city = response.data.id
+                        myApp.shortPrefix = response.data.id
+                        myApp.shortUrl = myApp.rootUrl + myApp.shortPrefix
+                        myApp.loading = false;
+                        myApp.showResult = true;
+                    })
+                    .catch(function (res) {
+                        if (res.response.status === 400) {
+                            myApp.message = "Invalid URL format";
+                        }
+                        myApp.loading = false;
+                        myApp.showResult = true;
+                    });
+
+            }
+        }
+    });
+</script>
+</html>

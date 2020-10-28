@@ -1,0 +1,5 @@
+{
+  "name": "Start on Heroku: Java",
+  "description": "ShortUrl application",
+  "addons": [ "heroku-postgresql" ]
+}
