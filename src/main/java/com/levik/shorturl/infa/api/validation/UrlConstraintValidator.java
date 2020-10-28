@@ -13,7 +13,7 @@ public class UrlConstraintValidator implements ConstraintValidator<UrlConstraint
     private final UrlValidator urlValidator;
 
     public UrlConstraintValidator() {
-        this.urlValidator = new UrlValidator(DEFAULT_SCHEMES);
+        this.urlValidator = new UrlValidator(DEFAULT_SCHEMES, UrlValidator.ALLOW_LOCAL_URLS);
     }
 
     @Override

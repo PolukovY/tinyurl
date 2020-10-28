@@ -31,7 +31,7 @@ public class ShortUrlController {
     @PostMapping
     public ResponseEntity<ShortUrlResponse> addLongUrl(@Valid @RequestBody ShortUrlRequest request) {
         var shortUrlResponse = shortUrlService.addLongUrl(request);
-        return ResponseEntity.ok(shortUrlResponse);
+        return ResponseEntity.status(201).body(shortUrlResponse);
     }
 
     @ApiOperation(value = "Find LongUrl by shortUrlId", nickname = "getLongUrl", notes = "Returns LongUrl", tags={ "shortUrl", })
