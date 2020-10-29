@@ -36,7 +36,7 @@ public class ShortUrlController {
 
     @ApiOperation(value = "Find LongUrl by shortUrlId", nickname = "getLongUrl", notes = "Returns LongUrl", tags={ "shortUrl", })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful operation with send redirect to long url"),
+            @ApiResponse(code = 302, message = "successful operation with send redirect to long url"),
             @ApiResponse(code = 404, message = "ShortUrlId not found") })
     @GetMapping("{shortUrlId}")
     public String getLongUrl(@PathVariable("shortUrlId") String shortUrlId) {
