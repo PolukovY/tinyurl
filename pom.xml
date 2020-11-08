@@ -164,6 +164,7 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+			<!-- build docker image -->
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
